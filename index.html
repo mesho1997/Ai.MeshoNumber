@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مقارنة وفرز الأرقام - XISORA</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: #f5f7fa;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        .card {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            padding: 30px;
+        }
+        h1 {
+            font-size: 1.8rem;
+            color: #0b2b4f;
+            margin-top: 0;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sub {
+            color: #4a5a72;
+            margin-bottom: 30px;
+            font-size: 1rem;
+            border-right: 4px solid #2b6eb0;
+            padding-right: 16px;
+            background: #f0f6ff;
+            border-radius: 0 12px 12px 0;
+            line-height: 1.5;
+        }
+        .two-col {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+        .col {
+            flex: 1 1 280px;
+            min-width: 250px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1e3a6b;
+            font-size: 1.1rem;
+        }
+        textarea {
+            width: 100%;
+            height: 250px;
+            padding: 15px;
+            border: 2px solid #dde2ec;
+            border-radius: 18px;
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            background: #fafbff;
+            resize: vertical;
+            transition: 0.2s;
+            direction: ltr;
+            text-align: left;
+        }
+        textarea:focus {
+            border-color: #2b6eb0;
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(43,110,176,0.1);
+        }
+        .actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 25px 0 30px;
+        }
+        button {
+            background: #0b2b4f;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 14px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 8px 14px rgba(11,43,79,0.25);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #254b77;
+        }
+        button:hover {
+            background: #1f3f6b;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px rgba(11,43,79,0.3);
+        }
+        .reset-btn {
+            background: #e3e9f2;
+            color: #1e3a6b;
+            box-shadow: none;
+            border: 1px solid #bcc9dc;
+        }
+        .reset-btn:hover {
+            background: #d2dbea;
+        }
+        .result-area {
+            background: #f0f5fe;
+            border-radius: 24px;
+            padding: 20px 25px;
+            border: 2px solid #cbd6e8;
+        }
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .result-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #0b2b4f;
+        }
+        .count-badge {
+            background: #1e5ca3;
+            color: white;
+            padding: 6px 20px;
+            border-radius: 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .result-box {
+            background: white;
+            border-radius: 18px;
+            padding: 20px;
+            border: 1px solid #b9cbee;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+            direction: ltr;
+            text-align: left;
+        }
+        .copy-btn {
+            background: white;
+            border: 2px solid #1e5ca3;
+            color: #1e5ca3;
+            padding: 10px 25px;
+            border-radius: 40px;
+            font-weight: 600;
+            margin-top: 15px;
+            font-size: 1rem;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .copy-btn:hover {
+            background: #1e5ca3;
+            color: white;
+        }
+        .footer-note {
+            font-size: 0.9rem;
+            color: #4f6079;
+            margin-top: 25px;
+            text-align: center;
+            border-top: 1px dashed #cbd6e8;
+            padding-top: 20px;
+        }
+        .example-btn {
+            background: none;
+            border: none;
+            color: #2b6eb0;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>📊 فرز الأرقام غير المتكررة</h1>
+    <div class="sub">
+        المجموعة الأولى: الأرقام الموجودة في تقارير MDR (المرجع)<br>
+        المجموعة الثانية: الأرقام الخاصة بك (My Numbers)<br>
+        <strong>النتيجة:</strong> الأرقام الموجودة في المجموعة الثانية فقط (غير المشتركة مع الأولى)
+    </div>
+
+    <div class="two-col">
+        <div class="col">
+            <label>📋 المجموعة الأولى (MDR) <button class="example-btn" id="example1">📎 تجربة بمثال</button></label>
+            <textarea id="list1" placeholder="ضع الأرقام هنا، كل رقم في سطر...">233277777568
+233271432684
+233272648793
+233279198565
+233578061682
+233548987007
+233269159232
+233279747762</textarea>
+        </div>
+        <div class="col">
+            <label>📋 المجموعة الثانية (My Numbers) <button class="example-btn" id="example2">📎 تجربة بمثال</button></label>
+            <textarea id="list2" placeholder="الأرقام الخاصة بك...">233279747762
+233260826246
+233269159232
+233548987007
+233578061682
+233279198565
+233272648793
+233271432684
+233277777568
+233267260561
+233578914172
+233238843891
+233277484841
+233262503441
+233279680262
+233277916469
+233276645602
+233275934885
+233267825239
+233560496454
+233262658687
+233275837459
+233273263754
+233268473340
+233273853816</textarea>
+        </div>
+    </div>
+
+    <div class="actions">
+        <button id="sortBtn">🔍 فرز وإظهار غير المتكرر</button>
+        <button class="reset-btn" id="resetBtn">🗑️ تفريغ الحقول</button>
+    </div>
+
+    <div class="result-area" id="resultArea">
+        <div class="result-header">
+            <h2>🔢 النتيجة (غير المتكررة في الثانية)</h2>
+            <span class="count-badge" id="countDisplay">0</span>
+        </div>
+        <div class="result-box" id="resultBox">انتظر الضغط على زر الفرز...</div>
+        <button class="copy-btn" id="copyBtn">📋 نسخ النتيجة</button>
+    </div>
+
+    <div class="footer-note">
+        <strong>ملاحظة:</strong> يتم تجاهل الأسطر الفارغة والمسافات. الأرقام تُقرأ كما هي (نص). يمكنك تعديل القوائم يدوياً.
+    </div>
+</div>
+
+<script>
+    (function() {
+        // عناصر الصفحة
+        const list1 = document.getElementById('list1');
+        const list2 = document.getElementById('list2');
+        const sortBtn = document.getElementById('sortBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const resultBox = document.getElementById('resultBox');
+        const countDisplay = document.getElementById('countDisplay');
+        const copyBtn = document.getElementById('copyBtn');
+        const example1 = document.getElementById('example1');
+        const example2 = document.getElementById('example2');
+
+        // دالة لتحويل النص من textarea إلى مصفوفة أرقام (نص) بعد تنظيفها
+        function parseNumbers(text) {
+            return text.split(/\n/)
+                .map(line => line.trim())               // إزالة المسافات قبل وبعد
+                .filter(line => line !== '');           // تجاهل الأسطر الفارغة
+        }
+
+        // دالة الفرز الرئيسية
+        function performSort() {
+            const arr1 = parseNumbers(list1.value);
+            const arr2 = parseNumbers(list2.value);
+
+            // تحويل المصفوفة الأولى إلى Set للبحث السريع
+            const set1 = new Set(arr1);
+
+            // تصفية العناصر الموجودة في arr2 والتي ليست في set1
+            const uniqueInSecond = arr2.filter(item => !set1.has(item));
+
+            // إزالة التكرارات داخل النتيجة نفسها (إذا تكرر رقم في القائمة الثانية نريده مرة واحدة فقط)
+            const finalUnique = [...new Set(uniqueInSecond)];
+
+            // عرض النتيجة
+            if (finalUnique.length === 0) {
+                resultBox.innerText = 'لا توجد أرقام غير متكررة في المجموعة الثانية.';
+            } else {
+                resultBox.innerText = finalUnique.join('\n');
+            }
+            countDisplay.innerText = finalUnique.length;
+        }
+
+        // تفريغ الحقول مع وضع نص افتراضي فارغ
+        function resetFields() {
+            list1.value = '';
+            list2.value = '';
+            resultBox.innerText = 'انتظر الضغط على زر الفرز...';
+            countDisplay.innerText = '0';
+        }
+
+        // نسخ النتيجة إلى الحافظة
+        function copyResult() {
+            const text = resultBox.innerText;
+            if (!text || text === 'انتظر الضغط على زر الفرز...' || text === 'لا توجد أرقام غير متكررة في المجموعة الثانية.') {
+                alert('لا يوجد نتيجة للنسخ أو النتيجة فارغة.');
+                return;
+            }
+            navigator.clipboard.writeText(text).then(() => {
+                alert('تم نسخ الأرقام إلى الحافظة');
+            }).catch(() => {
+                alert('تعذر النسخ، يرجى النسخ يدوياً');
+            });
+        }
+
+        // تعبئة مثال للمجموعة الأولى (بيانات التقرير)
+        function loadExample1() {
+            list1.value = `233277777568
+233271432684
+233272648793
+233279198565
+233578061682
+233548987007
+233269159232
+233279747762`;
+        }
+
+        // تعبئة مثال للمجموعة الثانية (My Numbers)
+        function loadExample2() {
+            list2.value = `233279747762
+233260826246
+233269159232
+233548987007
+233578061682
+233279198565
+233272648793
+233271432684
+233277777568
+233267260561
+233578914172
+233238843891
+233277484841
+233262503441
+233279680262
+233277916469
+233276645602
+233275934885
+233267825239
+233560496454
+233262658687
+233275837459
+233273263754
+233268473340
+233273853816`;
+        }
+
+        // أحداث الأزرار
+        sortBtn.addEventListener('click', performSort);
+        resetBtn.addEventListener('click', resetFields);
+        copyBtn.addEventListener('click', copyResult);
+        example1.addEventListener('click', loadExample1);
+        example2.addEventListener('click', loadExample2);
+
+        // اختياري: تنفيذ الفرز تلقائياً عند تحميل الصفحة إذا وجدت بيانات (للتوضيح)
+        window.addEventListener('load', function() {
+            // لو الحقول فيها أرقام من المثال المضمن في HTML، نعرض النتيجة مباشرة
+            if (list1.value.trim() !== '' && list2.value.trim() !== '') {
+                performSort();
+            }
+        });
+    })();
+</script>
+</body>
+</html>
